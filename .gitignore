@@ -1,7 +1,6 @@
 main
 webMonitor
 *.db
-restapi
 
 .DS_Store
 node_modules/
