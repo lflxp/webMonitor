@@ -1,0 +1,37 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "Uaj9uu59It0BlmgsFa0ZO3zEjrE=",
+			"path": "github.com/google/gopacket",
+			"revision": "93226cc8c82f71d90f346f89793c7864de983435",
+			"revisionTime": "2018-01-02T11:20:13Z"
+		},
+		{
+			"checksumSHA1": "Yk1jaU9rdAXxKk60XwA6tgbdyVI=",
+			"path": "github.com/google/gopacket/layers",
+			"revision": "93226cc8c82f71d90f346f89793c7864de983435",
+			"revisionTime": "2018-01-02T11:20:13Z"
+		},
+		{
+			"checksumSHA1": "wd3QYaS5550byZhwbhkjhuOOMnM=",
+			"path": "github.com/google/gopacket/pcap",
+			"revision": "93226cc8c82f71d90f346f89793c7864de983435",
+			"revisionTime": "2018-01-02T11:20:13Z"
+		},
+		{
+			"checksumSHA1": "HpnVP25yXZys8uwdVe25MKMIwn8=",
+			"path": "github.com/juju/errors",
+			"revision": "c7d06af17c68cd34c835053720b21f6549d9b0ee",
+			"revisionTime": "2017-07-03T01:00:42Z"
+		},
+		{
+			"checksumSHA1": "edGYbVeEux6zDfApui2Qna9pPHw=",
+			"path": "github.com/ugorji/go/codec",
+			"revision": "ccfe18359b55b97855cee1d3f74e5efbda4869dc",
+			"revisionTime": "2017-12-31T12:15:48Z"
+		}
+	],
+	"rootPath": "github.com/lflxp/webMonitor"
+}
