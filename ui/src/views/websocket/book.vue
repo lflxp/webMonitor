@@ -38,9 +38,11 @@
       </el-aside>
         
       <el-main>
-        <div id="app" @contextmenu="showMenu" style="background: pink;">
+        <!--  style="background: pink;" -->
+        <div id="app" @contextmenu="showMenu">
           <vue-context-menu :contextMenuData="contextMenuData"
                           @displayitem="displayitem"
+                          @savedata="savedata"
                           @showHtml="showHtml">
           </vue-context-menu>
           <!-- <el-card shadow="hover"> -->
@@ -49,7 +51,7 @@
               <el-button @click="markdown2Html" type="primary" icon="el-icon-document">To HTML</el-button> -->
             
               <div class="editor-container">
-                <markdown-editor id="contentEditor" ref="contentEditor" v-model="content" :height="300" :zIndex="20"></markdown-editor>
+                <markdown-editor id="contentEditor" ref="contentEditor" v-model="content" :height="600" :zIndex="20"></markdown-editor>
               </div>
               <!-- <div v-html="html"></div> -->
               <el-dialog title="预览" :visible.sync="dialogTableVisible">
@@ -67,7 +69,6 @@
   import MarkdownEditor from '@/components/MarkdownEditor'
   import Utils from '@/utils/remote'
 
-  let id = 1000
   const content = `
   **this is test**
   * vue
@@ -82,8 +83,10 @@ export default {
       return {
         dialogTableVisible: false,
         filterText: '',
+        tablename: 'tree',
         // data4: JSON.parse(JSON.stringify(data)),
         data4: [],
+        current: {},
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -111,6 +114,11 @@ export default {
               fnHandler: 'showHtml',
               icoName: 'fa fa-lightbulb-o',
               btnName: '预览'
+            },
+            {
+              fnHandler: 'savedata',
+              icoName: 'fa fa-save',
+              btnName: '保存'
             }
           ]
         }
@@ -123,9 +131,8 @@ export default {
     },
     mounted() {
       Utils.getIndex().then(data => {
-        console.log(data)
         this.data4 = JSON.parse(data.data)
-        console.log('data4', this.data4)
+        console.log('initial', this.data4)
       })
     },
     methods: {
@@ -146,7 +153,19 @@ export default {
         this.markdown2Html()
       },
       savedata() {
-        alert(1)
+        if (this.current.children === undefined) {
+          console.log('this is ok')
+          // var d2d = { 'tablename': this.tablename, 'key': this.current.label + '_' + this.current.id, 'value': JSON.stringify(this.content) }
+          var d2d = { 'tablename': this.tablename, 'key': this.current.label + '_' + this.current.id, 'value': this.content }
+          Utils.changeIndex(d2d).then(datas => {
+            console.log(datas)
+          })
+        } else {
+          this.$message({
+            message: '非叶子节点，不能进行数据保存!',
+            type: 'error'
+          })
+        }
       },
       markdown2Html() {
         import('showdown').then(showdown => {
@@ -155,6 +174,15 @@ export default {
         })
       },
       handleNodeClick(data) {
+        this.current = data
+        if (this.current.children === undefined) {
+          console.log('this is ok')
+          Utils.checkData(this.tablename, this.current.label + '_' + this.current.id).then(datas => {
+            console.log('asdasd', datas)
+            // this.content = JSON.stringify(datas.data)
+            this.content = datas.data
+          })
+        }
         console.log(data, new Date().getTime())
       },
       handleDragStart(node, ev) {
@@ -190,16 +218,15 @@ export default {
         return data.label.indexOf(value) !== -1
       },
       append(data) {
-        const newChild = { id: new Date().getTime(), label: 'testtest', children: [] }
+        var labels = prompt('请输入新增节点名称:')
+        const newChild = { id: new Date().getTime(), label: labels }
         if (!data.children) {
           this.$set(data, 'children', [])
         }
         // this.data4 = data.children.push(newChild)
         data.children.push(newChild)
-        console.log('dddd', this.data4)
 
         var d2d = { 'tablename': 'index', 'key': 'index', 'value': JSON.stringify(this.data4) }
-        console.log('d2d', d2d)
         Utils.changeIndex(d2d).then(datas => {
           console.log(datas)
         })
@@ -210,6 +237,11 @@ export default {
         const children = parent.data.children || parent.data
         const index = children.findIndex(d => d.id === data.id)
         children.splice(index, 1)
+        // update index
+        var d2d = { 'tablename': 'index', 'key': 'index', 'value': JSON.stringify(this.data4) }
+        Utils.changeIndex(d2d).then(datas => {
+          console.log(datas)
+        })
       },
 
       renderContent(h, { node, data, store }) {

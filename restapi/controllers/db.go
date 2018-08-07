@@ -26,7 +26,7 @@ func (u *DbController) Post() {
 	if err != nil {
 		u.Data["json"] = err.Error()
 	} else {
-		u.Data["json"] = fmt.Sprintf("add %s %s %s success", user.Tablename, user.Key, user.Value)
+		u.Data["json"] = fmt.Sprintf("add %s %s success", user.Tablename, user.Key)
 	}
 	u.ServeJSON()
 }
