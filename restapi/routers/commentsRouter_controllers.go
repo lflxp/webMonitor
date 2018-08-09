@@ -49,6 +49,14 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/lflxp/webMonitor/restapi/controllers:DbController"] = append(beego.GlobalControllerRouter["github.com/lflxp/webMonitor/restapi/controllers:DbController"],
 		beego.ControllerComments{
+			Method: "GetDataByTablename",
+			Router: `/:tablename`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/lflxp/webMonitor/restapi/controllers:DbController"] = append(beego.GlobalControllerRouter["github.com/lflxp/webMonitor/restapi/controllers:DbController"],
+		beego.ControllerComments{
 			Method: "Get",
 			Router: `/:tablename/:key`,
 			AllowHTTPMethods: []string{"get"},
@@ -73,17 +81,17 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/lflxp/webMonitor/restapi/controllers:DbController"] = append(beego.GlobalControllerRouter["github.com/lflxp/webMonitor/restapi/controllers:DbController"],
 		beego.ControllerComments{
-			Method: "AddTables",
+			Method: "GetAllTables",
 			Router: `/tables`,
-			AllowHTTPMethods: []string{"post"},
+			AllowHTTPMethods: []string{"get"},
 			MethodParams: param.Make(),
 			Params: nil})
 
 	beego.GlobalControllerRouter["github.com/lflxp/webMonitor/restapi/controllers:DbController"] = append(beego.GlobalControllerRouter["github.com/lflxp/webMonitor/restapi/controllers:DbController"],
 		beego.ControllerComments{
-			Method: "GetAllTables",
+			Method: "AddTables",
 			Router: `/tables`,
-			AllowHTTPMethods: []string{"get"},
+			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 

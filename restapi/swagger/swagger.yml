@@ -23,6 +23,22 @@ paths:
           schema:
             $ref: '#/definitions/models.User'
   /db/{tablename}:
+    get:
+      tags:
+      - db
+      description: 遍历指定表的所有数据
+      operationId: DbController.GetAll
+      parameters:
+      - in: path
+        name: tablename
+        description: name of table
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.Tablename'
     delete:
       tags:
       - db
@@ -92,7 +108,7 @@ paths:
     post:
       tags:
       - db
-      description: create users
+      description: 添加一个完整的数据 表、key、value
       operationId: DbController.CreateBucket
       parameters:
       - in: body
@@ -110,7 +126,7 @@ paths:
     get:
       tags:
       - db
-      description: get all Tables
+      description: 获取所有表的数据
       operationId: DbController.GetAllTables
       responses:
         "200":
@@ -118,12 +134,12 @@ paths:
     post:
       tags:
       - db
-      description: create users
+      description: 只添加表
       operationId: DbController.CreateUser
       parameters:
       - in: body
         name: body
-        description: body for user content
+        description: Tablename字段中只有tablename字段会被用到
         required: true
         schema:
           $ref: '#/definitions/models.Bucket'
@@ -268,6 +284,8 @@ paths:
         "403":
           description: body is empty
 definitions:
+  .Tablename:
+    type: object
   models.AdminUser:
     title: AdminUser
     type: object

@@ -17,4 +17,6 @@ package-lock.json
 *.ntvs*
 *.njsproj
 *.sln
-
+*.exe
+*.exe~
+*.lock

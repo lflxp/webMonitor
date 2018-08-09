@@ -14,7 +14,7 @@ type DbController struct {
 }
 
 // @Title CreateBucket
-// @Description create users
+// @Description 添加一个完整的数据 表、key、value
 // @Param	body		body 	models.Bucket	true		"body for Bucket content"
 // @Success 200 {int} models.Bucket.Key
 // @Failure 403 body is empty
@@ -32,14 +32,15 @@ func (u *DbController) Post() {
 }
 
 // @Title CreateUser
-// @Description create users
-// @Param	body		body 	models.Bucket	true		"body for user content"
+// @Description 只添加表
+// @Param	body		body 	models.Bucket	true		"Tablename字段中只有tablename字段会被用到"
 // @Success 200 {int} models.Tablename
 // @Failure 403 body is empty
 // @router /tables [post]
 func (u *DbController) AddTables() {
 	var user models.Bucket
 	json.Unmarshal(u.Ctx.Input.RequestBody, &user)
+	fmt.Println(user)
 	err := db.CreateBucket(user.Tablename)
 	if err != nil {
 		u.Data["json"] = err
@@ -50,7 +51,7 @@ func (u *DbController) AddTables() {
 }
 
 // @Title GetAllTables
-// @Description get all Tables
+// @Description 获取所有表的数据
 // @Success 200 {string} success
 // @router /tables [get]
 func (u *DbController) GetAllTables() {
@@ -59,6 +60,26 @@ func (u *DbController) GetAllTables() {
 		u.Data["json"] = err.Error()
 	} else {
 		u.Data["json"] = data
+	}
+	u.ServeJSON()
+}
+
+// @Title GetAll
+// @Description 遍历指定表的所有数据
+// @Param  tablename  path  string true  "name of table"
+// @Success 200 {object} models.Tablename
+// @router /:tablename [get]
+func (u *DbController) GetDataByTablename() {
+	tablename := u.GetString(":tablename")
+	if tablename != "" {
+		data ,err := db.GetAllByTables(tablename)
+		if err != nil {
+			u.Data["json"] = err.Error()
+		} else {
+			u.Data["json"] = data
+		}
+	} else {
+		u.Data["json"] = "tablename or key is none"
 	}
 	u.ServeJSON()
 }

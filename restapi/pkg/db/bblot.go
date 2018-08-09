@@ -110,6 +110,20 @@ func GetAllTables() (map[string]string, error) {
 	return tmp, err
 }
 
+func GetAllByTables(name string) (map[string]string, error) {
+	tmp := map[string]string{}
+	err := Db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(name))
+		c := b.Cursor()
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			tmp[string(k)] = string(v)
+			Mmap[string(k)] = string(v)
+		}
+		return nil
+	})
+	return tmp, err
+}
+
 func DeleteTables(tablename string) error {
 	return Db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(beego.AppConfig.String("init::db")))
